@@ -72,18 +72,10 @@
 
 # Find the item type that corresponds to the badges of each three-Elf group. What is the sum of the priorities of those item types?
 
+import string
 
 GROUP_SIZE = 3
-
-# Priority
-def get_priority(elem):
-    if elem.islower():
-        # 'a' = 97, 'b' = 98, ...
-        return ord(elem) - 96
-    if elem.isupper():
-        # 'A' = 65, 'B' = 66, ...
-        return ord(elem) - 38
-    return 0
+priorities = dict(zip(string.ascii_lowercase + string.ascii_uppercase, range(1,53)))
 
 # Part 1
 def day3_part1():
@@ -94,7 +86,7 @@ def day3_part1():
         str1 = line[ :len(line)//2]     # first half
         str2 = line[len(line)//2: ]     # second half
         inter = set(str1) & set(str2)   # compartments intersection
-        priority_sum += get_priority(inter.pop())
+        priority_sum += priorities[inter.pop()]
 
     return priority_sum
 
@@ -116,7 +108,7 @@ def day3_part2():
             for g in groups:
                 inter = inter.intersection(g)
             inter.discard('\n')
-            priority_sum += get_priority(inter.pop())
+            priority_sum += priorities[inter.pop()]
 
     return priority_sum
 
