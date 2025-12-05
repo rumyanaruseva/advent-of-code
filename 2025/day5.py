@@ -32,5 +32,16 @@
 # Ingredient ID 32 is spoiled.
 # So, in this example, 3 of the available ingredient IDs are fresh.
 
-# Process the database file from the new inventory management system. How many of the available ingredient IDs are fresh?
+# ReaPre-process input
+input = open("day5-input.txt", "r").read()
+fresh_raw, available_raw = input.split("\n\n")
+fresh = [tuple(map(int, range.split("-")) )for range in fresh_raw.strip().split("\n")]
+available = list(map(int, available_raw.strip().split("\n")))
 
+count = 0
+for ingredient in available:
+    if (any(start <= ingredient <= end for start, end in fresh)):
+        count += 1
+
+
+print (count)
