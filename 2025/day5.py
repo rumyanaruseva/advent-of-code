@@ -83,7 +83,7 @@ def part2_og():
     return len(fresh_all)
 
 # Part 2 - Alternative 4: Interval Merging (Most Efficient for Large Ranges)
-# Cursorz's suggestion
+# Resorted to cursor's suggestion
 def part2_alt():
     fresh_ranges, _ = processInput("day5-input.txt")
     
