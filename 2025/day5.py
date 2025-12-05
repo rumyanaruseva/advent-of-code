@@ -49,7 +49,7 @@
 # Process the database file again. How many ingredient IDs are considered to be fresh according to the fresh ingredient ID ranges?
 
 
-# Pre-Process Input
+# Pre-Process Input - Current Approach
 def processInput(file):
     input = open(file, "r").read()    
     fresh_raw, available_raw = input.split("\n\n")
@@ -57,6 +57,83 @@ def processInput(file):
     available = list(map(int, available_raw.strip().split("\n")))
 
     return fresh, available
+
+# Alternative 1: Using context manager (Recommended - Better resource management)
+def processInput_alt1(file):
+    with open(file, "r") as f:
+        content = f.read()
+    
+    fresh_raw, available_raw = content.split("\n\n")
+    fresh = [tuple(map(int, line.split("-"))) for line in fresh_raw.strip().split("\n")]
+    available = [int(line) for line in available_raw.strip().split("\n")]
+    
+    return fresh, available
+
+# Alternative 2: Reading line by line (Memory efficient for large files)
+def processInput_alt2(file):
+    fresh = []
+    available = []
+    current_section = "fresh"
+    
+    with open(file, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line:  # Empty line = separator
+                current_section = "available"
+                continue
+            
+            if current_section == "fresh":
+                start, end = map(int, line.split("-"))
+                fresh.append((start, end))
+            else:
+                available.append(int(line))
+    
+    return fresh, available
+
+# Alternative 3: Using readlines() and list slicing
+def processInput_alt3(file):
+    with open(file, "r") as f:
+        lines = [line.strip() for line in f.readlines()]
+    
+    # Find the blank line separator
+    separator_idx = lines.index("")
+    
+    fresh_lines = lines[:separator_idx]
+    available_lines = lines[separator_idx + 1:]
+    
+    fresh = [tuple(map(int, line.split("-"))) for line in fresh_lines]
+    available = [int(line) for line in available_lines]
+    
+    return fresh, available
+
+# Alternative 4: More explicit parsing with error handling
+def processInput_alt4(file):
+    try:
+        with open(file, "r") as f:
+            content = f.read().strip()
+        
+        if "\n\n" not in content:
+            raise ValueError("Input file must contain a blank line separator")
+        
+        sections = content.split("\n\n", 1)  # Split only on first occurrence
+        fresh_raw, available_raw = sections[0].strip(), sections[1].strip()
+        
+        # Parse fresh ranges
+        fresh = []
+        for line in fresh_raw.split("\n"):
+            if "-" in line:
+                start, end = line.split("-", 1)  # Split only on first "-"
+                fresh.append((int(start), int(end)))
+        
+        # Parse available IDs
+        available = [int(line) for line in available_raw.split("\n") if line]
+        
+        return fresh, available
+    
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File '{file}' not found")
+    except ValueError as e:
+        raise ValueError(f"Error parsing file: {e}")
 
 # Part 1
 def part1():
