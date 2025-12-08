@@ -1,6 +1,3 @@
-# Day 7: 
-# https://adventofcode.com/2025/day/7
-
 def processInput(file):
     with open(file, "r") as f:
         lines = [line.strip() for line in f.readlines()]
@@ -106,8 +103,8 @@ def main():
     result = part1()
     print("Part 1:", result)
     
-    result2 = part2()
-    print("Part 2:", result2)
+    result = part2()
+    print("Part 2:", result)
 
 if __name__ == "__main__":
     main()
